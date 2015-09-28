@@ -77,6 +77,29 @@ variables = crearVariables(X,Y)
 
 print (X,"\n\n",Y,"\n\n", np.around(variables[0][0], decimals=1))
 
+#DEFINICIO DE RESTRICCIONS#
+
+contRest = 0
+for x in range (0, tauler.shape[0]):
+    for y in range (0, tauler.shape[1]):
+        if (X[x][y] >0):
+            if(Y[x][y] >0):
+                contRest += 1
+
+restriccions = np.zeros((contRest,),dtype=('f4,i4,f4,i4'))
+contRest = 0
+
+for x in range (0, tauler.shape[0]):
+    for y in range (0, tauler.shape[1]):
+        if (X[x][y] >0):
+            if(Y[x][y] >0):
+                restriccions[contRest][0] = X[x][y]
+                restriccions[contRest][2] = Y[x][y]
+                contRest += 1
+
+
+print (restriccions)
+
 #Variables -> [float id,int size, string paraula]
 #Restrictions -> [id1, pos1, id2, pos 2]
 
