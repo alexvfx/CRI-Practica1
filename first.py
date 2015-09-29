@@ -75,7 +75,7 @@ construirVariablesVer(tauler, Y)
 variables = crearVariables(X,Y)
 
 
-print (X,"\n\n",Y,"\n\n", np.around(variables[0][0], decimals=1))
+print (X,"\n\n",Y,"\n\n", np.around(variables[8][0], decimals=1),"\n\n", variables,"\n\n")
 
 #DEFINICIO DE RESTRICCIONS#
 
@@ -98,7 +98,7 @@ for x in range (0, tauler.shape[0]):
                 contRest += 1
 
 
-print (restriccions)
+print ('Restriccions', restriccions)
 
 #Variables -> [float id,int size, string paraula]
 #Restrictions -> [id1, pos1, id2, pos 2]
