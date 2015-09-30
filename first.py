@@ -89,10 +89,9 @@ for x in range (0, tauler.shape[0]):
 restriccions = np.zeros((contRest,),dtype=('f4,i4,f4,i4'))
 contRest = 0
 
-contHor = 0
-numHor = 0
-contVer = 0
-numVer = 0
+
+contVer = {}
+contHor = {}
 ver = False
 hor = False
 for x in range (0, tauler.shape[0]):
@@ -101,25 +100,23 @@ for x in range (0, tauler.shape[0]):
         hor = False
         if (X[x][y] >0):
             hor = True
-            if(numHor==X[x][y]):
-                contHor +=1
+            if(X[x][y] not in contHor.keys()):
+                contHor[X[x][y]]=1
             else:
-                contHor = 1
-                numHor = X[x][y]
+                contHor[X[x][y]]+=1
 
         if(Y[x][y] >0):
             ver = True
-            if(numHor==X[x][y]):
-                contVer +=1
+            if(Y[x][y] not in contVer.keys()):
+                contVer[Y[x][y]]=1
             else:
-                contVer = 1
-                numVer = X[x][y]
+                contVer[Y[x][y]]+=1
 
         if(hor and ver):
             restriccions[contRest][0] = X[x][y]
-            restriccions[contRest][1] = contHor
+            restriccions[contRest][1] = contHor[X[x][y]]
             restriccions[contRest][2] = Y[x][y]
-            restriccions[contRest][3] = contVer
+            restriccions[contRest][3] = contVer[Y[x][y]]
             contRest += 1
 
 
