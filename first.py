@@ -4,7 +4,7 @@ __author__ = 'Marti, Alex, Alvaro'
 import numpy as np
 np.set_printoptions(precision=2)
 
-fitxer_dic = "diccionari_C.txt"
+fitxer_dic = "diccionari_Cq.txt"
 fitxer_tau = "crossword_CB.txt"
 diccionari = np.genfromtxt(fitxer_dic,dtype='str')
 tauler = np.loadtxt(fitxer_tau, dtype='|S16', comments='!')
