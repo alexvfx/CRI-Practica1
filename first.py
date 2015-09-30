@@ -1,4 +1,4 @@
-__author__ = 'alvaro'
+__author__ = 'Marti, Alex, Alvaro'
 # -*- coding: utf-8 -*-
 
 import numpy as np
