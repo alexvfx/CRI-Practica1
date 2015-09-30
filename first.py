@@ -13,6 +13,29 @@ diccionari = np.genfromtxt(fitxer_dic,dtype='str')
 tauler = np.loadtxt(fitxer_tau, dtype='|S16', comments='!')
 tauler.tostring()
 
+def construirDiccionario(diccionari):
+    dicc = {}
+    dicc[2] = np.array([])
+    dicc[3] = np.array([])
+    dicc[4] = np.array([])
+    dicc[5] = np.array([])
+    dicc[6] = np.array([])
+    dicc[7] = np.array([])
+    for element in diccionari:
+        if len(element) == 2:
+            dicc[2] = np.append(dicc[2],[element])
+        elif len(element) == 3:
+            dicc[3] = np.append(dicc[3],[element])
+        elif len(element) == 4:
+            dicc[4] = np.append(dicc[4],[element])
+        elif len(element) == 5:
+            dicc[5] = np.append(dicc[5],[element])
+        elif len(element) == 6:
+            dicc[6] = np.append(dicc[6],[element])
+        elif len(element) == 7:
+            dicc[7] = np.append(dicc[7],[element])
+    return dicc
+
 X = np.zeros(tauler.shape)
 Y = np.zeros(tauler.shape)
 
