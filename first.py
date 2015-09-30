@@ -119,8 +119,9 @@ for x in range (0, tauler.shape[0]):
             restriccions[contRest][3] = contVer[Y[x][y]]
             contRest += 1
 
-
+print ('Variables', variables)
 print ('Restriccions', restriccions)
+print ('Diccionari', diccionari)
 
 #Variables -> [float id,int size, string paraula]
 #Restrictions -> [id1, pos1, id2, pos 2]
@@ -144,14 +145,26 @@ FFuncio
     :return:
  """
 
+def SatisfaRestriccions(v, LVA, R):
+    if not LVA:
+        return True
+    else:
+        return True
 
-
-def backtracking(lva, lvna, r, d):
-  if not lvna:
-      print ("llista buida")
-      return lva
-  else:
-      print (lvna)
+def Backtracking(LVA, LVNA, R, D):
+    if not LVNA:
+        return LVA
+    var = LVNA[0]
+    for valor in D:
+        if len(valor) == var[1]:
+            var[2]=valor
+            sat=SatisfaRestriccions(var, LVA, R)
+            if sat == True:
+                LVA.append(var)
+                LVNA.remove(0)
+                res=Backtracking(LVA, LVNA, R, D)
+                if res == LVA:
+                    return res
 
 if __name__ == "__main__":
     pass
