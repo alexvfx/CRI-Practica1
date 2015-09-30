@@ -1,10 +1,13 @@
 __author__ = 'Marti, Alex, Alvaro'
 # -*- coding: utf-8 -*-
 
+#1 -> horitzontal
+#2 -> vertical
+
 import numpy as np
 np.set_printoptions(precision=2)
 
-fitxer_dic = "diccionari_Cq.txt"
+fitxer_dic = "diccionari_C.txt"
 fitxer_tau = "crossword_CB.txt"
 diccionari = np.genfromtxt(fitxer_dic,dtype='str')
 tauler = np.loadtxt(fitxer_tau, dtype='|S16', comments='!')
@@ -34,8 +37,9 @@ def construirVariablesVer(tauler,Y):
         for y in range (0, tauler.shape[1]):
             try:
                 if (int(tauler[y,x]) > 0 and adjudicat==False):
-                    indice = int(tauler[y,x])
-                    adjudicat = True
+                    if (y < tauler.shape[1]-1 and int(tauler[y+1,x]) == 0):
+                        indice = int(tauler[y,x])
+                        adjudicat = True
                 if (int(tauler[y,x]) >= 0):
                     Y[y,x] = indice
             except ValueError:
@@ -45,7 +49,8 @@ def crearVariables(X,Y):
     contParaules=-1
     contEspais=0
     indice = 0
-    variables = np.zeros((9,),dtype=('f4,i4,a10'))
+    numeroParaules =  contarParaules(X,Y)
+    variables = np.zeros((numeroParaules,),dtype=('f4,i4,a10,i4'))
     for x in range(0,X.shape[0]):
         for y in range(0,X.shape[1]):
             if (X[x,y] > 0 and X[x,y] != indice):
@@ -55,7 +60,7 @@ def crearVariables(X,Y):
             elif (X[x,y] == indice):
                 contEspais+=1
                 if (contEspais > 1):
-                    variables[contParaules] = (indice,contEspais,'')
+                    variables[contParaules] = (indice,contEspais,'',1)
 
     contEspais=0
     for x in range(0,Y.shape[0]):
@@ -67,15 +72,34 @@ def crearVariables(X,Y):
             elif (Y[y,x] == indice):
                 contEspais+=1
                 if (contEspais > 1):
-                    variables[contParaules] = (indice+0.2,contEspais,'')
+                    variables[contParaules] = (indice,contEspais,'',2)
     return variables
+
+def contarParaules(X,Y):
+    contParaules=0
+    indice = 0
+    for x in range(0,X.shape[0]):
+        for y in range(0,X.shape[1]):
+            if (X[x,y] > 0 and X[x,y] != indice):
+                indice = X[x,y]
+                contParaules += 1
+
+
+    for x in range(0,Y.shape[0]):
+        for y in range(0,Y.shape[1]):
+            if (Y[y,x] > 0 and Y[y,x] != indice):
+                indice = Y[y,x]
+                contParaules += 1
+
+
+    return contParaules
 
 construirVariablesHor(tauler, X)
 construirVariablesVer(tauler, Y)
 variables = crearVariables(X,Y)
 
 
-print (X,"\n\n",Y,"\n\n", np.around(variables[8][0], decimals=1),"\n\n", variables,"\n\n")
+print (X,"\n\n",Y,"\n\n","\n\n", variables,"\n\n")
 
 #DEFINICIO DE RESTRICCIONS#
 
