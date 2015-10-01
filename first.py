@@ -125,50 +125,51 @@ variables = crearVariables(X,Y)
 print (X,"\n\n",Y,"\n\n","\n\n", variables,"\n\n")
 
 #DEFINICIO DE RESTRICCIONS#
+def construccioRestriccions(X,Y):
+    contRest = 0
+    for x in range (0, X.shape[0]):
+        for y in range (0, Y.shape[1]):
+            if (X[x][y] >0):
+                if(Y[x][y] >0):
+                    contRest += 1
 
-contRest = 0
-for x in range (0, tauler.shape[0]):
-    for y in range (0, tauler.shape[1]):
-        if (X[x][y] >0):
+    restriccions = np.zeros((contRest,),dtype=('f4,i4,f4,i4'))
+    contRest = 0
+
+
+    contVer = {}
+    contHor = {}
+    ver = False
+    hor = False
+    for x in range (0, tauler.shape[0]):
+        for y in range (0, tauler.shape[1]):
+            ver = False
+            hor = False
+            if (X[x][y] >0):
+                hor = True
+                if(X[x][y] not in contHor.keys()):
+                    contHor[X[x][y]]=1
+                else:
+                    contHor[X[x][y]]+=1
+
             if(Y[x][y] >0):
+                ver = True
+                if(Y[x][y] not in contVer.keys()):
+                    contVer[Y[x][y]]=1
+                else:
+                    contVer[Y[x][y]]+=1
+
+            if(hor and ver):
+                restriccions[contRest][0] = X[x][y]
+                restriccions[contRest][1] = contHor[X[x][y]]
+                restriccions[contRest][2] = Y[x][y]
+                restriccions[contRest][3] = contVer[Y[x][y]]
                 contRest += 1
-
-restriccions = np.zeros((contRest,),dtype=('f4,i4,f4,i4'))
-contRest = 0
-
-
-contVer = {}
-contHor = {}
-ver = False
-hor = False
-for x in range (0, tauler.shape[0]):
-    for y in range (0, tauler.shape[1]):
-        ver = False
-        hor = False
-        if (X[x][y] >0):
-            hor = True
-            if(X[x][y] not in contHor.keys()):
-                contHor[X[x][y]]=1
-            else:
-                contHor[X[x][y]]+=1
-
-        if(Y[x][y] >0):
-            ver = True
-            if(Y[x][y] not in contVer.keys()):
-                contVer[Y[x][y]]=1
-            else:
-                contVer[Y[x][y]]+=1
-
-        if(hor and ver):
-            restriccions[contRest][0] = X[x][y]
-            restriccions[contRest][1] = contHor[X[x][y]]
-            restriccions[contRest][2] = Y[x][y]
-            restriccions[contRest][3] = contVer[Y[x][y]]
-            contRest += 1
-
+    return restriccions
 print ('Variables', variables)
-print ('Restriccions', restriccions)
-print ('Diccionari', diccionari)
+print ('Restriccions',construccioRestriccions(X,Y))
+dicc = construirDiccionario(diccionari)
+print ('diccionari', dicc)
 
 #Variables -> [float id,int size, string paraula]
 #Restrictions -> [id1, pos1, id2, pos 2]
@@ -196,22 +197,53 @@ def SatisfaRestriccions(v, LVA, R):
     if not LVA:
         return True
     else:
+        for restriccio in R:
+            if v[4]==1:
+                if restriccio[0]==v[0]:
+                    for variable in LVA:
+                        if variable[0]==restriccio[2]:
+                            if variable[4]==2:
+                                if not v[2][restriccio[1]]==variable[2][restriccio[3]]:
+                                    return False
+            else:
+                if restriccio[2]==v[0]:
+                    for variable in LVA:
+                        if variable[0]==restriccio[0]:
+                            if variable[4]==1:
+                                if not v[2][restriccio[3]]==variable[2][restriccio[1]]:
+                                    return False
         return True
 
+
 def Backtracking(LVA, LVNA, R, D):
-    if not LVNA:
+    if LVNA == []:
         return LVA
     var = LVNA[0]
-    for valor in D:
-        if len(valor) == var[1]:
-            var[2]=valor
-            sat=SatisfaRestriccions(var, LVA, R)
-            if sat == True:
-                LVA.append(var)
-                LVNA.remove(0)
-                res=Backtracking(LVA, LVNA, R, D)
-                if res == LVA:
-                    return res
+    for paraula in D[var[1]]:
+        var[2]=paraula
+        sat=SatisfaRestriccions(var, LVA, R)
+        if sat == True:
+            LVA = np.append(LVA,[var])
+            LVNA = np.delete(LVNA, 0)
+            res=Backtracking(LVA, LVNA, R, D)
+            if res:
+                return res
+        var[3]=''
+    return None
+
+
+
+variables = np.array([])
+print(variables)
+
+#variables = np.delete(variables,0)
+#variables = np.append(variables,0)
+variables=np.append(variables,[[5.0,1,'',1]], axis=0)
+variables=np.append(variables,[[6.0,6,'',1]],axis=0)
+print(variables)
+
+
+#print (Backtracking(np.array([]),variables,construccioRestriccions(X,Y),dicc))
 
 if __name__ == "__main__":
     pass
