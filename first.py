@@ -13,7 +13,7 @@ diccionari = np.genfromtxt(fitxer_dic,dtype='str')
 tauler = np.loadtxt(fitxer_tau, dtype='|S16', comments='!')
 tauler.tostring()
 
-def construirDiccionario(diccionari):
+def construirDiccionari(diccionari):
     dicc = {}
     dicc[2] = np.array([])
     dicc[3] = np.array([])
@@ -121,7 +121,6 @@ construirVariablesHor(tauler, X)
 construirVariablesVer(tauler, Y)
 variables = crearVariables(X,Y)
 
-
 print (X,"\n\n",Y,"\n\n","\n\n", variables,"\n\n")
 
 #DEFINICIO DE RESTRICCIONS#
@@ -166,32 +165,14 @@ def construccioRestriccions(X,Y):
                 restriccions[contRest][3] = contVer[Y[x][y]]
                 contRest += 1
     return restriccions
+
 print ('Variables', variables)
 print ('Restriccions',construccioRestriccions(X,Y))
-dicc = construirDiccionario(diccionari)
+dicc = construirDiccionari(diccionari)
 print ('diccionari', dicc)
 
 #Variables -> [float id,int size, string paraula]
 #Restrictions -> [id1, pos1, id2, pos 2]
-
-
-
-"""
-    Funcio Backtracking(LVA,LVNA,R,D)
-Si (LVNA és buida) llavors Retornar(LVA) fSi
-Var=Cap(LVNA);
-Per a cada (valor del Domini(Var, D) que podem assignar a Var) fer
-Si (SatisfaRestriccions([Var valor],LVA,R)) llavors
-Res=Backtracking(Insertar([Var, valor],LVA),Cua(LVNA),R,D);
-Si (Res és una solució completa) llavors
-Retornar(Res);
-Fsi
-Fsi
-Fper
-Retornar(Falla)
-FFuncio
-    :return:
- """
 
 def SatisfaRestriccions(v, LVA, R):
     if not LVA:
@@ -202,18 +183,17 @@ def SatisfaRestriccions(v, LVA, R):
                 if restriccio[0]==v[0]:
                     for variable in LVA:
                         if variable[0]==restriccio[2]:
-                            if variable[4]==2:
+                            if variable[3]==2:
                                 if not v[2][restriccio[1]]==variable[2][restriccio[3]]:
                                     return False
             else:
                 if restriccio[2]==v[0]:
                     for variable in LVA:
                         if variable[0]==restriccio[0]:
-                            if variable[4]==1:
+                            if variable[3]==1:
                                 if not v[2][restriccio[3]]==variable[2][restriccio[1]]:
                                     return False
         return True
-
 
 def Backtracking(LVA, LVNA, R, D):
     if LVNA == []:
@@ -223,24 +203,16 @@ def Backtracking(LVA, LVNA, R, D):
         var[2]=paraula
         sat=SatisfaRestriccions(var, LVA, R)
         if sat == True:
-            LVA = np.append(LVA,[var])
-            LVNA = np.delete(LVNA, 0)
+            LVA.append(var)
+            del LVNA[0]
             res=Backtracking(LVA, LVNA, R, D)
             if res:
                 return res
-        var[3]=''
+            else:
+                mal = LVA.pop()
+                LVNA.insert(0,mal)
+        var[2]=''
     return None
-
-
-
-variables = np.array([])
-print(variables)
-
-#variables = np.delete(variables,0)
-#variables = np.append(variables,0)
-variables=np.append(variables,[[5.0,1,'',1]], axis=0)
-variables=np.append(variables,[[6.0,6,'',1]],axis=0)
-print(variables)
 
 
 #print (Backtracking(np.array([]),variables,construccioRestriccions(X,Y),dicc))
