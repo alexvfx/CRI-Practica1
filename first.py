@@ -4,8 +4,11 @@ __author__ = 'Marti, Alex, Alvaro'
 #1 -> horitzontal
 #2 -> vertical
 
+#Variables -> [float id,int size, string paraula]
+#Restrictions -> [id1, pos1, id2, pos 2]
 import numpy as np
 np.set_printoptions(precision=2)
+dt = np.dtype([('id',np.int32,1),('size',np.int32,1),('name', np.str_, 16), ('orientation',np.int32,1)])
 
 fitxer_dic = "diccionari_C.txt"
 fitxer_tau = "crossword_CB.txt"
@@ -72,8 +75,9 @@ def crearVariables(X,Y):
     contParaules=-1
     contEspais=0
     indice = 0
-    numeroParaules =  contarParaules(X,Y)
-    variables = np.zeros((numeroParaules,),dtype=('f4,i4,a10,i4'))
+    first = True
+    variablesReturn = np.array([], dtype=dt)
+
     for x in range(0,X.shape[0]):
         for y in range(0,X.shape[1]):
             if (X[x,y] > 0 and X[x,y] != indice):
@@ -83,7 +87,9 @@ def crearVariables(X,Y):
             elif (X[x,y] == indice):
                 contEspais+=1
                 if (contEspais > 1):
-                    variables[contParaules] = (indice,contEspais,'',1)
+                    if (y==X.shape[0]-1 or X[x,y+1] == 0):
+                        m = np.array([(indice, contEspais,'',1)], dtype=dt)
+                        variablesReturn = np.append(variablesReturn, m)
 
     contEspais=0
     for x in range(0,Y.shape[0]):
@@ -95,8 +101,11 @@ def crearVariables(X,Y):
             elif (Y[y,x] == indice):
                 contEspais+=1
                 if (contEspais > 1):
-                    variables[contParaules] = (indice,contEspais,'',2)
-    return variables
+                    if (y==Y.shape[0]-1 or Y[y+1,x] == 0):
+                        m = np.array([(indice, contEspais,'',1)], dtype=dt)
+                        variablesReturn = np.append(variablesReturn, m)
+
+    return variablesReturn
 
 def contarParaules(X,Y):
     contParaules=0
@@ -171,8 +180,6 @@ print ('Restriccions',construccioRestriccions(X,Y))
 dicc = construirDiccionari(diccionari)
 print ('diccionari', dicc)
 
-#Variables -> [float id,int size, string paraula]
-#Restrictions -> [id1, pos1, id2, pos 2]
 
 def SatisfaRestriccions(v, LVA, R):
     if not LVA:
@@ -215,6 +222,11 @@ def Backtracking(LVA, LVNA, R, D):
     return None
 
 
+
+
+
+
+    #variablesReturn = np.append(variablesReturn,x)
 #print (Backtracking(np.array([]),variables,construccioRestriccions(X,Y),dicc))
 
 if __name__ == "__main__":
