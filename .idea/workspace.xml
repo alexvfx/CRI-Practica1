@@ -26,12 +26,16 @@
       <file leaf-file-name="first.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/first.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.3876405">
-              <caret line="240" column="52" selection-start-line="240" selection-start-column="52" selection-end-line="240" selection-end-column="52" />
+            <state vertical-scroll-proportion="0.21683674">
+              <caret line="74" column="108" selection-start-line="74" selection-start-column="108" selection-end-line="74" selection-end-column="108" />
               <folding>
+                <element signature="e#383#1097#0" expanded="false" />
                 <element signature="e#1195#1623#0" expanded="false" />
                 <element signature="e#1666#2178#0" expanded="false" />
-                <element signature="e#3219#3652#0" expanded="false" />
+                <element signature="e#3528#3961#0" expanded="false" />
+                <element signature="e#4184#5376#0" expanded="false" />
+                <element signature="e#6067#6839#0" expanded="false" />
+                <element signature="e#6881#7258#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -294,7 +298,7 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3952756" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33858266" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -320,7 +324,9 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
@@ -329,33 +335,13 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+            <element signature="e#383#1097#0" expanded="false" />
             <element signature="e#1195#1623#0" expanded="false" />
             <element signature="e#1666#2178#0" expanded="false" />
-            <element signature="e#3219#3652#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/first.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#1195#1623#0" expanded="false" />
-            <element signature="e#1666#2178#0" expanded="false" />
-            <element signature="e#3219#3652#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/first.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#1195#1623#0" expanded="false" />
-            <element signature="e#1666#2178#0" expanded="false" />
-            <element signature="e#3219#3652#0" expanded="false" />
+            <element signature="e#3528#3961#0" expanded="false" />
+            <element signature="e#4184#5376#0" expanded="false" />
+            <element signature="e#6067#6839#0" expanded="false" />
+            <element signature="e#6881#7258#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -370,12 +356,72 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/first.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.3876405">
-          <caret line="240" column="52" selection-start-line="240" selection-start-column="52" selection-end-line="240" selection-end-column="52" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+            <element signature="e#383#1097#0" expanded="false" />
             <element signature="e#1195#1623#0" expanded="false" />
             <element signature="e#1666#2178#0" expanded="false" />
-            <element signature="e#3219#3652#0" expanded="false" />
+            <element signature="e#3528#3961#0" expanded="false" />
+            <element signature="e#4184#5376#0" expanded="false" />
+            <element signature="e#6067#6839#0" expanded="false" />
+            <element signature="e#6881#7258#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/first.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#383#1097#0" expanded="false" />
+            <element signature="e#1195#1623#0" expanded="false" />
+            <element signature="e#1666#2178#0" expanded="false" />
+            <element signature="e#3528#3961#0" expanded="false" />
+            <element signature="e#4184#5376#0" expanded="false" />
+            <element signature="e#6067#6839#0" expanded="false" />
+            <element signature="e#6881#7258#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/first.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#383#1097#0" expanded="false" />
+            <element signature="e#1195#1623#0" expanded="false" />
+            <element signature="e#1666#2178#0" expanded="false" />
+            <element signature="e#3528#3961#0" expanded="false" />
+            <element signature="e#4184#5376#0" expanded="false" />
+            <element signature="e#6067#6839#0" expanded="false" />
+            <element signature="e#6881#7258#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/WinPython-64bit-3.4.3.5/python-3.4.3.amd64/Lib/site-packages/numpy/lib/function_base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="3883" column="0" selection-start-line="3883" selection-start-column="0" selection-end-line="3883" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/first.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.21683674">
+          <caret line="74" column="108" selection-start-line="74" selection-start-column="108" selection-end-line="74" selection-end-column="108" />
+          <folding>
+            <element signature="e#383#1097#0" expanded="false" />
+            <element signature="e#1195#1623#0" expanded="false" />
+            <element signature="e#1666#2178#0" expanded="false" />
+            <element signature="e#3528#3961#0" expanded="false" />
+            <element signature="e#4184#5376#0" expanded="false" />
+            <element signature="e#6067#6839#0" expanded="false" />
+            <element signature="e#6881#7258#0" expanded="false" />
           </folding>
         </state>
       </provider>

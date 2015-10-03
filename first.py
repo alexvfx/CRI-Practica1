@@ -72,8 +72,8 @@ def crearVariables(X,Y):
     contParaules=-1
     contEspais=0
     indice = 0
-    numeroParaules =  contarParaules(X,Y)
-    variables = np.zeros((numeroParaules,),dtype=('f4,i4,a10,i4'))
+    variables = np.dtype([('id',  np.int32), ('size', np.int32), ('word', np.str_),('orientation',  np.int32)])
+    variablesRetorn = np.array([])
     for x in range(0,X.shape[0]):
         for y in range(0,X.shape[1]):
             if (X[x,y] > 0 and X[x,y] != indice):
@@ -83,7 +83,8 @@ def crearVariables(X,Y):
             elif (X[x,y] == indice):
                 contEspais+=1
                 if (contEspais > 1):
-                    variables[contParaules] = (indice,contEspais,'',1)
+                    asignar = np.array([('id', indice), ('size', contEspais), ('word', 'a'),('orientation', 1)], dtype=variables)
+                    #variablesRetorn=np.append(variablesRetorn,[asignar])
 
     contEspais=0
     for x in range(0,Y.shape[0]):
@@ -95,8 +96,10 @@ def crearVariables(X,Y):
             elif (Y[y,x] == indice):
                 contEspais+=1
                 if (contEspais > 1):
-                    variables[contParaules] = (indice,contEspais,'',2)
-    return variables
+                   asignar = np.array([('id', indice), ('size', contEspais), ('word', 'a'),('orientation', 2)], dtype=variables)
+                  # variablesRetorn=np.append(variablesRetorn,[asignar])
+
+    return variablesRetorn
 
 def contarParaules(X,Y):
     contParaules=0
@@ -122,7 +125,7 @@ construirVariablesVer(tauler, Y)
 variables = crearVariables(X,Y)
 
 
-print (X,"\n\n",Y,"\n\n","\n\n", variables,"\n\n")
+print (X,"\n\n",Y,"\n\n","\n\n", variables[1],"\n\n")
 
 #DEFINICIO DE RESTRICCIONS#
 def construccioRestriccions(X,Y):
@@ -171,7 +174,7 @@ print ('Restriccions',construccioRestriccions(X,Y))
 dicc = construirDiccionario(diccionari)
 print ('diccionari', dicc)
 
-#Variables -> [float id,int size, string paraula]
+#Variables -> [float id,int size, string paraula, orientació]
 #Restrictions -> [id1, pos1, id2, pos 2]
 
 
@@ -232,17 +235,16 @@ def Backtracking(LVA, LVNA, R, D):
     return None
 
 
-
-variables = np.array([])
+'''
+#variables = np.dtype([('id',  np.int32, 1), ('size', np.int32, 1), ('word', np.str_, 16),('orientation',  np.int32, 1)])
 print(variables)
 
-#variables = np.delete(variables,0)
+variables = np.delete(variables,0)
 #variables = np.append(variables,0)
-variables=np.append(variables,[[5.0,1,'',1]], axis=0)
-variables=np.append(variables,[[6.0,6,'',1]],axis=0)
-print(variables)
+variables=np.append(variables,[[5.0,1,'',1]])
 
 
+'''
 #print (Backtracking(np.array([]),variables,construccioRestriccions(X,Y),dicc))
 
 if __name__ == "__main__":
