@@ -75,7 +75,7 @@ def crearVariables(X,Y):
     contParaules=-1
     contEspais=0
     indice = 0
-    first = True
+
     variablesReturn = np.array([], dtype=dt)
 
     for x in range(0,X.shape[0]):
@@ -102,7 +102,7 @@ def crearVariables(X,Y):
                 contEspais+=1
                 if (contEspais > 1):
                     if (y==Y.shape[0]-1 or Y[y+1,x] == 0):
-                        m = np.array([(indice, contEspais,'',1)], dtype=dt)
+                        m = np.array([(indice, contEspais,'',2)], dtype=dt)
                         variablesReturn = np.append(variablesReturn, m)
 
     return variablesReturn
@@ -129,8 +129,6 @@ def contarParaules(X,Y):
 construirVariablesHor(tauler, X)
 construirVariablesVer(tauler, Y)
 variables = crearVariables(X,Y)
-
-print (X,"\n\n",Y,"\n\n","\n\n", variables,"\n\n")
 
 #DEFINICIO DE RESTRICCIONS#
 def construccioRestriccions(X,Y):
@@ -178,15 +176,14 @@ def construccioRestriccions(X,Y):
 print ('Variables', variables)
 print ('Restriccions',construccioRestriccions(X,Y))
 dicc = construirDiccionari(diccionari)
-print ('diccionari', dicc)
-
+#print ('diccionari', dicc)
 
 def SatisfaRestriccions(v, LVA, R):
     if not LVA:
         return True
     else:
         for restriccio in R:
-            if v[4]==1:
+            if v[3]==1:
                 if restriccio[0]==v[0]:
                     for variable in LVA:
                         if variable[0]==restriccio[2]:
@@ -210,24 +207,19 @@ def Backtracking(LVA, LVNA, R, D):
         var[2]=paraula
         sat=SatisfaRestriccions(var, LVA, R)
         if sat == True:
-            LVA.append(var)
-            del LVNA[0]
+            LVA = np.append(LVA, var)
+            print (LVA)
+            LVNA = np.delete(LVNA,0)
             res=Backtracking(LVA, LVNA, R, D)
             if res:
                 return res
             else:
-                mal = LVA.pop()
-                LVNA.insert(0,mal)
+                mal = np.delete(LVA, 0)
+                LVNA = np.insert(LVNA, 0, mal)
         var[2]=''
     return None
-
-
-
-
-
-
-    #variablesReturn = np.append(variablesReturn,x)
-#print (Backtracking(np.array([]),variables,construccioRestriccions(X,Y),dicc))
+llistaBuida = np.array([], dtype=dt)
+print (Backtracking(llistaBuida,variables,construccioRestriccions(X,Y),dicc))
 
 if __name__ == "__main__":
     pass
