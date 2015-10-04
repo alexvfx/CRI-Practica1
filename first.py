@@ -18,25 +18,13 @@ tauler.tostring()
 
 def construirDiccionari(diccionari):
     dicc = {}
-    dicc[2] = np.array([])
-    dicc[3] = np.array([])
-    dicc[4] = np.array([])
-    dicc[5] = np.array([])
-    dicc[6] = np.array([])
-    dicc[7] = np.array([])
+    max = 7
+    for x in range(2,max+1):
+        dicc[x] = np.array([])
+
     for element in diccionari:
-        if len(element) == 2:
-            dicc[2] = np.append(dicc[2],[element])
-        elif len(element) == 3:
-            dicc[3] = np.append(dicc[3],[element])
-        elif len(element) == 4:
-            dicc[4] = np.append(dicc[4],[element])
-        elif len(element) == 5:
-            dicc[5] = np.append(dicc[5],[element])
-        elif len(element) == 6:
-            dicc[6] = np.append(dicc[6],[element])
-        elif len(element) == 7:
-            dicc[7] = np.append(dicc[7],[element])
+        dicc[len(element)] = np.append(dicc[len(element)],[element])
+
     return dicc
 
 X = np.zeros(tauler.shape)
@@ -130,72 +118,57 @@ construirVariablesHor(tauler, X)
 construirVariablesVer(tauler, Y)
 variables = crearVariables(X,Y)
 
-#DEFINICIO DE RESTRICCIONS#
-def construccioRestriccions(X,Y):
-    contRest = 0
-    for x in range (0, X.shape[0]):
-        for y in range (0, Y.shape[1]):
-            if (X[x][y] >0):
-                if(Y[x][y] >0):
-                    contRest += 1
+def construirRestriccions(X,Y):
 
-    restriccions = np.zeros((contRest,),dtype=('f4,i4,f4,i4'))
-    contRest = 0
-
+    dtRestr = np.dtype([('id1',np.int32,1),('word1',np.int32,1),('id2',np.int32,1), ('word2',np.int32,1)])
+    restriccions = np.array([],dtype=dtRestr)
 
     contVer = {}
     contHor = {}
-    ver = False
-    hor = False
     for x in range (0, tauler.shape[0]):
         for y in range (0, tauler.shape[1]):
-            ver = False
-            hor = False
             if (X[x][y] >0):
-                hor = True
                 if(X[x][y] not in contHor.keys()):
-                    contHor[X[x][y]]=1
+                    contHor[X[x][y]]=0
                 else:
                     contHor[X[x][y]]+=1
 
             if(Y[x][y] >0):
-                ver = True
                 if(Y[x][y] not in contVer.keys()):
-                    contVer[Y[x][y]]=1
+                    contVer[Y[x][y]]=0
                 else:
                     contVer[Y[x][y]]+=1
 
-            if(hor and ver):
-                restriccions[contRest][0] = X[x][y]
-                restriccions[contRest][1] = contHor[X[x][y]]
-                restriccions[contRest][2] = Y[x][y]
-                restriccions[contRest][3] = contVer[Y[x][y]]
-                contRest += 1
-    return restriccions
+            if(X[x][y] >0 and Y[x][y] >0):
+                m = np.array([(X[x][y],contHor[X[x][y]],Y[x][y],contVer[Y[x][y]])], dtype=dtRestr)
+                restriccions = np.append(restriccions, m)
 
+    return restriccions
+print('X\n', X)
+print('Y\n', Y)
 print ('Variables', variables)
-print ('Restriccions',construccioRestriccions(X,Y))
+print ('Restriccions',construirRestriccions(X,Y))
 dicc = construirDiccionari(diccionari)
-#print ('diccionari', dicc)
+print ('diccionari', dicc)
 
 def SatisfaRestriccions(v, LVA, R):
-    if not LVA:
+    if LVA == []:
         return True
     else:
         for restriccio in R:
-            if v[3]==1:
+            if v[3]==1:  #horitzontal
                 if restriccio[0]==v[0]:
-                    for variable in LVA:
-                        if variable[0]==restriccio[2]:
-                            if variable[3]==2:
-                                if not v[2][restriccio[1]]==variable[2][restriccio[3]]:
+                    for varAssig in LVA:
+                        if varAssig[3]==2:
+                            if varAssig[0]==restriccio[2]:
+                                if not v[2][restriccio[1]]==varAssig[2][restriccio[3]]:
                                     return False
-            else:
+            else:    #vertical
                 if restriccio[2]==v[0]:
-                    for variable in LVA:
-                        if variable[0]==restriccio[0]:
-                            if variable[3]==1:
-                                if not v[2][restriccio[3]]==variable[2][restriccio[1]]:
+                    for varAssig in LVA:
+                        if varAssig[3]==1:
+                            if varAssig[0]==restriccio[0]:
+                                if not v[2][restriccio[3]]==varAssig[2][restriccio[1]]:
                                     return False
         return True
 
@@ -219,7 +192,7 @@ def Backtracking(LVA, LVNA, R, D):
         var[2]=''
     return None
 llistaBuida = np.array([], dtype=dt)
-print (Backtracking(llistaBuida,variables,construccioRestriccions(X,Y),dicc))
+print (Backtracking(llistaBuida,variables,construirRestriccions(X,Y),dicc))
 
 if __name__ == "__main__":
     pass
