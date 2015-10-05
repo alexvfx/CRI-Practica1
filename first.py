@@ -10,15 +10,15 @@ import numpy as np
 np.set_printoptions(precision=2)
 dt = np.dtype([('id',np.int32,1),('size',np.int32,1),('name', np.str_, 16), ('orientation',np.int32,1)])
 
-fitxer_dic = "diccionari_C.txt"
-fitxer_tau = "crossword_CB.txt"
+fitxer_dic = "diccionari_CB.txt"
+fitxer_tau = "crossword_C.txt"
 diccionari = np.genfromtxt(fitxer_dic,dtype='str')
 tauler = np.loadtxt(fitxer_tau, dtype='|S16', comments='!')
 tauler.tostring()
 
 def construirDiccionari(diccionari):
     dicc = {}
-    max = 7
+    max = 20
     for x in range(2,max+1):
         dicc[x] = np.array([])
 
@@ -173,7 +173,7 @@ def SatisfaRestriccions(v, LVA, R):
         return True
 
 def Backtracking(LVA, LVNA, R, D):
-    if LVNA == []:
+    if len(LVNA) == 0:
         return LVA
     var = LVNA[0]
     for paraula in D[var[1]]:
@@ -181,16 +181,17 @@ def Backtracking(LVA, LVNA, R, D):
         sat=SatisfaRestriccions(var, LVA, R)
         if sat == True:
             LVA = np.append(LVA, var)
-            print (LVA)
             LVNA = np.delete(LVNA,0)
             res=Backtracking(LVA, LVNA, R, D)
-            if res:
+            if res != 0:
                 return res
             else:
-                mal = np.delete(LVA, 0)
+                mal = LVA[-1]
+                LVA = np.delete(LVA, -1)
                 LVNA = np.insert(LVNA, 0, mal)
         var[2]=''
-    return None
+    return 0
+
 llistaBuida = np.array([], dtype=dt)
 print (Backtracking(llistaBuida,variables,construirRestriccions(X,Y),dicc))
 
