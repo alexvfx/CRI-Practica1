@@ -158,23 +158,27 @@ def SatisfaRestriccions(v, LVA, R):
                                     return False
         return True
 
+'''ActualitzarDominis(‘(X v),L,R):
+Retorna la llista dels dominis per a les variables no assignades
+de L considerant les restriccions de R despres d’assignar X amb v, retorna fals si algun
+domini actualitzat és buit.
+'''
+def ActualitzarDominis():
+    return True
+
 def Backtracking(LVA, LVNA, R, D):
     if len(LVNA) == 0:
         return LVA
     var = LVNA[0]
+    LVNA = np.delete(LVNA,0)
     for paraula in D[var[1]]:
         var[2]=paraula
-        sat=SatisfaRestriccions(var, LVA, R)
-        if sat == True:
-            LVA = np.append(LVA, var)
-            LVNA = np.delete(LVNA,0)
-            res=Backtracking(LVA, LVNA, R, D)
-            if res != 0:
-                return res
-            else:
-                mal = LVA[-1]
-                LVA = np.delete(LVA, -1)
-                LVNA = np.insert(LVNA, 0, mal)
+        if SatisfaRestriccions(var, LVA, R):
+            DA = ActualitzarDominis()
+            if(DA != False):
+                res=Backtracking(np.append(LVA, var), LVNA, R, D)
+                if res != 0:
+                    return res
         var[2]=''
     return 0
 
@@ -183,7 +187,7 @@ if __name__ == "__main__":
     dt = np.dtype([('id',np.int32,1),('size',np.int32,1),('name', '|S16', 1), ('orientation',np.int32,1)])
 
     fitxer_dic = "diccionari_CB.txt"
-    fitxer_tau = "crossword_A.txt"
+    fitxer_tau = "crossword_CB.txt"
     diccionari = np.genfromtxt(fitxer_dic,dtype='|S16')
     tauler = np.loadtxt(fitxer_tau, dtype='|S16', comments='!')
     tauler.tostring()
@@ -194,10 +198,13 @@ if __name__ == "__main__":
     construirVariablesVer(tauler, Y)
     print ("tauler")
     print (X,"\n")
-    print (Y)
+    print (Y,"\n")
     variables = crearVariables(X,Y)
+
+    print ("Variables:\n",variables,"\n")
     restriccions = construirRestriccions(X,Y)
+    print ("Restriccions:\n",restriccions,"\n")
     dicc = construirDiccionari(diccionari)
     llistaBuida = np.array([], dtype=dt)
 
-    #print (Backtracking(llistaBuida,variables,restriccions,dicc))
+    print ("Solucio:\n",Backtracking(llistaBuida,variables,restriccions,dicc))
