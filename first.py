@@ -40,31 +40,15 @@ def construirVariablesVer(tauler,Y):
         for x in range (0, tauler.shape[1]):
             try:
                 if (int(tauler[x,y]) > 0 and adjudicat==False):
-                    indice = int(tauler[x,y])
-                    adjudicat = True
+                    if (x < tauler.shape[1]-1 and int(tauler[x+1,y])==0):
+                        indice = int(tauler[x,y])
+                        adjudicat = True
                 if (int(tauler[x,y]) >= 0):
                     Y[x,y] = indice
 
             except ValueError:
                 indice = 0
                 adjudicat = False
-
-    '''
-    for x in range (0, tauler.shape[1]):
-        adjudicat = False
-        indice = 0
-        for y in range (0, tauler.shape[0]):
-            try:
-                if (int(tauler[y,x]) > 0 and adjudicat==False):
-                    if (y < tauler.shape[1]-1 and int(tauler[y+1,x]) == 0):
-                        indice = int(tauler[y,x])
-                        adjudicat = True
-                if (int(tauler[y,x]) >= 0):
-                    Y[y,x] = indice
-            except ValueError:
-                indice = 0
-                adjudicat = False
-                '''
 
 def crearVariables(X,Y):
     contParaules=-1
