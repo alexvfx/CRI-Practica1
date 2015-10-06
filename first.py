@@ -9,6 +9,7 @@ __author__ = 'Marti, Alex, Alvaro'
 import numpy as np
 
 def construirDiccionari(diccionari):
+
     dicc = {}
     max = 20
     for x in range(2,max+1):
@@ -121,6 +122,12 @@ def construirRestriccions(X,Y):
                 restriccions = np.append(restriccions, m)
     return restriccions
 
+def construirDA(variables,dicc):
+    DA = {}
+    for variable in variables:
+        DA[(variable[0],variable[3])] = dicc[variable[1]]
+    return DA
+
 def SatisfaRestriccions(v, LVA, R):
     if LVA == []:
         return True
@@ -168,12 +175,12 @@ def Backtracking(LVA, LVNA, R, D):
 
 if __name__ == "__main__":
     np.set_printoptions(precision=2)
-    dt = np.dtype([('id',np.int32,1),('size',np.int32,1),('name', '|S16', 1), ('orientation',np.int32,1)])
+    dt = np.dtype([('id',np.int32,1 ),('size',np.int32,1),('name', '|S16', 1), ('orientation',np.int32,1)])
 
-    fitxer_dic = "diccionari_CB.txt"
-    fitxer_tau = "crossword_CB.txt"
-    diccionari = np.genfromtxt(fitxer_dic,dtype='|S16')
-    tauler = np.loadtxt(fitxer_tau, dtype='|S16', comments='!')
+    fitxer_dic = "diccionari_A.txt"
+    fitxer_tau = "crossword_A.txt"
+    diccionari = np.genfromtxt(fitxer_dic,dtype='S16')
+    tauler = np.loadtxt(fitxer_tau, dtype='S16', comments='!')
     tauler.tostring()
 
     X = np.zeros(tauler.shape)
@@ -189,6 +196,10 @@ if __name__ == "__main__":
     restriccions = construirRestriccions(X,Y)
     print ("Restriccions:\n",restriccions,"\n")
     dicc = construirDiccionari(diccionari)
+    #DA = construirDA(variables,dicc)
+    #print ("DA\n", DA)
     llistaBuida = np.array([], dtype=dt)
 
-    print ("Solucio:\n",Backtracking(llistaBuida,variables,restriccions,dicc))
+    #print ("Solucio:\n",Backtracking(llistaBuida,variables,restriccions,dicc))
+    print (variables[0][0])
+    diccionario = {(1,"v"): "2"}
