@@ -28,8 +28,10 @@ def construirVariablesHor(tauler,X):
                     adjudicat = True
                 if (int(tauler[x,y]) >= 0):
                     X[x,y] = indice
+
             except ValueError:
                 indice = 0
+                adjudicat = False
 
 def construirVariablesVer(tauler,Y):
     for x in range (0, tauler.shape[0]):
@@ -45,6 +47,7 @@ def construirVariablesVer(tauler,Y):
                     Y[y,x] = indice
             except ValueError:
                 indice = 0
+                adjudicat = False
 
 def crearVariables(X,Y):
     contParaules=-1
@@ -160,11 +163,11 @@ def Backtracking(LVA, LVNA, R, D):
 
 if __name__ == "__main__":
     np.set_printoptions(precision=2)
-    dt = np.dtype([('id',np.int32,1),('size',np.int32,1),('name', np.str_, 16), ('orientation',np.int32,1)])
+    dt = np.dtype([('id',np.int32,1),('size',np.int32,1),('name', '|S16', 1), ('orientation',np.int32,1)])
 
-    fitxer_dic = "diccionari_C.txt"
-    fitxer_tau = "crossword_C.txt"
-    diccionari = np.genfromtxt(fitxer_dic,dtype='str')
+    fitxer_dic = "diccionari_CB.txt"
+    fitxer_tau = "crossword_A.txt"
+    diccionari = np.genfromtxt(fitxer_dic,dtype='|S16')
     tauler = np.loadtxt(fitxer_tau, dtype='|S16', comments='!')
     tauler.tostring()
 
@@ -172,9 +175,12 @@ if __name__ == "__main__":
     Y = np.zeros(tauler.shape)
     construirVariablesHor(tauler, X)
     construirVariablesVer(tauler, Y)
+    print ("tauler")
+    print (X,"\n")
+    print (Y)
     variables = crearVariables(X,Y)
     restriccions = construirRestriccions(X,Y)
     dicc = construirDiccionari(diccionari)
     llistaBuida = np.array([], dtype=dt)
 
-    print (Backtracking(llistaBuida,variables,restriccions,dicc))
+    #print (Backtracking(llistaBuida,variables,restriccions,dicc))
