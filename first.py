@@ -66,7 +66,7 @@ def crearVariables(X,Y):
                 contEspais+=1
                 if (contEspais > 1):
                     if (y==X.shape[0]-1 or X[x,y+1] == 0):
-                        m = np.array([(indice, contEspais,'',1)], dtype=dt)
+                        m = np.array([(indice, contEspais,-1,1)], dtype=dt)
                         variablesReturn = np.append(variablesReturn, m)
     contEspais=0
     for x in range(0,Y.shape[0]):
@@ -79,7 +79,7 @@ def crearVariables(X,Y):
                 contEspais+=1
                 if (contEspais > 1):
                     if (y==Y.shape[0]-1 or Y[y+1,x] == 0):
-                        m = np.array([(indice, contEspais,'',2)], dtype=dt)
+                        m = np.array([(indice, contEspais,-1,2)], dtype=dt)
                         variablesReturn = np.append(variablesReturn, m)
     return variablesReturn
 
@@ -124,8 +124,12 @@ def construirRestriccions(X,Y):
 
 def construirDA(variables,dicc):
     DA = {}
+    print (dicc)
     for variable in variables:
-        DA[(variable[0],variable[3])] = dicc[variable[1]]
+        llista =[]
+        for i in range(len(dicc[variable[1]])):
+            llista.append(i)
+        DA[(variable[0],variable[3])] = llista
     return DA
 
 def SatisfaRestriccions(v, LVA, R):
@@ -163,30 +167,25 @@ def Backtracking(LVA, LVNA, R, DA):
     var = LVNA[0]
     LVNA = np.delete(LVNA,0)
     for paraula in DA[(var[0],var[3])]:
-        var[2]=paraula
-        if SatisfaRestriccions(var, LVA, R):
+        var[2]=1
+        if SatisfaRestriccions(var, LVA, R, DA):
             DA = ActualitzarDominis()
             if(DA != False):
                 res=Backtracking(np.append(LVA, var), LVNA, R, DA)
                 if res != 0:
                     return res
-        var[2]=''
+        var[2]= -1
     return 0
 
 if __name__ == "__main__":
     np.set_printoptions(precision=2)
-    dt = np.dtype([('id',np.int32,1 ),('size',np.int32,1),('name', '|S16', 1), ('orientation',np.int32,1)])
+    dt = np.dtype([('id',np.int32,1 ),('size',np.int32,1),('index', np.int32, 1), ('orientation',np.int32,1)])
 
-    fitxer_dic = "diccionari_A.txt"
-    fitxer_tau = "crossword_A.txt"
+    fitxer_dic = "diccionari_CB.txt"
+    fitxer_tau = "crossword_CB.txt"
     diccionari = np.genfromtxt(fitxer_dic,dtype='S16')
     tauler = np.loadtxt(fitxer_tau, dtype='S16', comments='!')
     tauler.tostring()
-
-
-    #x = np.zeros(3, dtype={'DA':['variable', 'diccionari'], 'formats':['i4','str']})
-
-
 
     X = np.zeros(tauler.shape)
     Y = np.zeros(tauler.shape)
@@ -202,8 +201,8 @@ if __name__ == "__main__":
     print ("Restriccions:\n",restriccions,"\n")
     dicc = construirDiccionari(diccionari)
     DA = construirDA(variables,dicc)
-    print ("DA ",DA[(1,1)])
-    #print ("DA\n", DA)
+    print ("DA ",DA)
+
     llistaBuida = np.array([], dtype=dt)
 
     print ("Solucio:\n",Backtracking(llistaBuida,variables,restriccions,DA))
