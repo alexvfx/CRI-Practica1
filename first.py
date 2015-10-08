@@ -13,9 +13,9 @@ def construirDiccionari(diccionari):
     dicc = {}
     max = 20
     for x in range(2,max+1):
-        dicc[x] = np.array([])
+        dicc[x] =[]
     for element in diccionari:
-        dicc[len(element)] = np.append(dicc[len(element)],[element])
+        dicc[len(element)].append([element])
     return dicc
 
 def construirVariablesHor(tauler,X):
@@ -157,17 +157,17 @@ domini actualitzat és buit.
 def ActualitzarDominis():
     return True
 
-def Backtracking(LVA, LVNA, R, D):
+def Backtracking(LVA, LVNA, R, DA):
     if len(LVNA) == 0:
         return LVA
     var = LVNA[0]
     LVNA = np.delete(LVNA,0)
-    for paraula in D[var[1]]:
+    for paraula in DA[(var[0],var[3])]:
         var[2]=paraula
         if SatisfaRestriccions(var, LVA, R):
             DA = ActualitzarDominis()
             if(DA != False):
-                res=Backtracking(np.append(LVA, var), LVNA, R, D)
+                res=Backtracking(np.append(LVA, var), LVNA, R, DA)
                 if res != 0:
                     return res
         var[2]=''
@@ -183,6 +183,11 @@ if __name__ == "__main__":
     tauler = np.loadtxt(fitxer_tau, dtype='S16', comments='!')
     tauler.tostring()
 
+
+    #x = np.zeros(3, dtype={'DA':['variable', 'diccionari'], 'formats':['i4','str']})
+
+
+
     X = np.zeros(tauler.shape)
     Y = np.zeros(tauler.shape)
     construirVariablesHor(tauler, X)
@@ -196,10 +201,10 @@ if __name__ == "__main__":
     restriccions = construirRestriccions(X,Y)
     print ("Restriccions:\n",restriccions,"\n")
     dicc = construirDiccionari(diccionari)
-    #DA = construirDA(variables,dicc)
+    DA = construirDA(variables,dicc)
+    print ("DA ",DA[(1,1)])
     #print ("DA\n", DA)
     llistaBuida = np.array([], dtype=dt)
 
-    #print ("Solucio:\n",Backtracking(llistaBuida,variables,restriccions,dicc))
-    print (variables[0][0])
-    diccionario = {(1,"v"): "2"}
+    print ("Solucio:\n",Backtracking(llistaBuida,variables,restriccions,DA))
+
