@@ -15,7 +15,7 @@ def construirDiccionari(diccionari):
     for x in range(2,max+1):
         dicc[x] =[]
     for element in diccionari:
-        dicc[len(element)].append([element])
+        dicc[len(element)].append(element)
     return dicc
 
 def construirVariablesHor(tauler,X):
@@ -132,7 +132,7 @@ def construirDA(variables,dicc):
         DA[(variable[0],variable[3])] = llista
     return DA
 
-def SatisfaRestriccions(v, LVA, R):
+def SatisfaRestriccions(v, LVA, R, DA, D):
     if LVA == []:
         return True
     else:
@@ -142,14 +142,14 @@ def SatisfaRestriccions(v, LVA, R):
                     for varAssig in LVA:
                         if varAssig[3]==2:
                             if varAssig[0]==restriccio[2]:
-                                if not v[2][restriccio[1]]==varAssig[2][restriccio[3]]:
+                                if not D[v[1]][v[2]][restriccio[1]]== D[varAssig[1]][varAssig[2]][restriccio[3]]:
                                     return False
             else:    #vertical
                 if restriccio[2]==v[0]:
                     for varAssig in LVA:
                         if varAssig[3]==1:
                             if varAssig[0]==restriccio[0]:
-                                if not v[2][restriccio[3]]==varAssig[2][restriccio[1]]:
+                                if not D[v[1]][v[2]][restriccio[3]]== D[varAssig[1]][varAssig[2]][restriccio[1]]:
                                     return False
         return True
 
@@ -161,17 +161,17 @@ domini actualitzat és buit.
 def ActualitzarDominis():
     return True
 
-def Backtracking(LVA, LVNA, R, DA):
+def Backtracking(LVA, LVNA, R, DA, D):
     if len(LVNA) == 0:
         return LVA
     var = LVNA[0]
     LVNA = np.delete(LVNA,0)
     for paraula in DA[(var[0],var[3])]:
-        var[2]=1
-        if SatisfaRestriccions(var, LVA, R, DA):
-            DA = ActualitzarDominis()
-            if(DA != False):
-                res=Backtracking(np.append(LVA, var), LVNA, R, DA)
+        var[2]=paraula
+        if SatisfaRestriccions(var, LVA, R, DA, D):
+            DAaux = ActualitzarDominis()
+            if(DAaux != False):
+                res=Backtracking(np.append(LVA, var), LVNA, R, DA, D)
                 if res != 0:
                     return res
         var[2]= -1
@@ -201,9 +201,9 @@ if __name__ == "__main__":
     print ("Restriccions:\n",restriccions,"\n")
     dicc = construirDiccionari(diccionari)
     DA = construirDA(variables,dicc)
-    print ("DA ",DA)
-
+    print ("DA:",DA)
+    for i in DA[(variables[3][0],variables[3][3])]:
+        print(i)
     llistaBuida = np.array([], dtype=dt)
-
-    print ("Solucio:\n",Backtracking(llistaBuida,variables,restriccions,DA))
+    print ("Solucio:\n",Backtracking(llistaBuida,variables,restriccions,DA, dicc))
 
