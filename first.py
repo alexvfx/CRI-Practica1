@@ -153,6 +153,35 @@ def SatisfaRestriccions(v, LVA, R, DA, D):
                                     return False
         return True
 
+def printaSolucio(taulerHor, taulerVer, llista,dicc):
+    solucio = np.zeros(taulerHor.shape, dtype='str')
+    for x in range (0, taulerHor.shape[0]):
+        indexLletra = 0
+        for y in range (0, taulerHor.shape[1]):
+            if (int(taulerHor[x,y]) > 0):
+                for j in range(0, len(llista)):
+                    if (llista[j][0] == int(taulerHor[x,y]) and llista[j][3]==1):
+                        solucio[x,y]=chr(dicc[llista[j][1]][llista[j][2]][indexLletra])
+                        indexLletra+=1
+                        #print (chr(dicc[llista[j][1]][llista[j][2]][y-llista[j][1]]))
+            else:
+                indexLletra = 0
+                solucio[x,y]="!"
+
+
+    for y in range (0, taulerVer.shape[0]):
+        indexLletra = 0
+        for x in range (0, taulerVer.shape[1]):
+            if (int(taulerVer[x,y]) > 0):
+                for j in range(0, len(llista)):
+                    if (llista[j][0] == int(taulerVer[x,y]) and llista[j][3]==2):
+                        solucio[x,y]=chr(dicc[llista[j][1]][llista[j][2]][indexLletra])
+                        indexLletra+=1
+                        #print (chr(dicc[llista[j][1]][llista[j][2]][y-llista[j][1]]))
+            else:
+                indexLletra = 0
+                #solucio[x,y]="!"
+    print ("\n",solucio)
 '''ActualitzarDominis(‘(X v),L,R):
 Retorna la llista dels dominis per a les variables no assignades
 de L considerant les restriccions de R despres d’assignar X amb v, retorna fals si algun
@@ -201,9 +230,12 @@ if __name__ == "__main__":
     print ("Restriccions:\n",restriccions,"\n")
     dicc = construirDiccionari(diccionari)
     DA = construirDA(variables,dicc)
-    print ("DA:",DA)
-    for i in DA[(variables[3][0],variables[3][3])]:
-        print(i)
+    print ("Dicc\n:",dicc)
+
     llistaBuida = np.array([], dtype=dt)
-    print ("Solucio:\n",Backtracking(llistaBuida,variables,restriccions,DA, dicc))
+    llista = Backtracking(llistaBuida,variables,restriccions,DA, dicc)
+    print ("Solucio:\n", llista)
+    for j in range(0,len(llista)):
+        print (dicc[llista[j][1]][llista[j][2]])
+    printaSolucio(X,Y,llista,dicc)
 
