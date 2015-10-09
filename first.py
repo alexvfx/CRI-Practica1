@@ -126,9 +126,9 @@ def construirDA(variables,dicc):
     DA = {}
     print (dicc)
     for variable in variables:
-        llista =[]
+        llista =np.array([],dtype=np.int32)
         for i in range(len(dicc[variable[1]])):
-            llista.append(i)
+            llista = np.append(llista,(i))
         DA[(variable[0],variable[3])] = llista
     return DA
 
@@ -187,8 +187,35 @@ Retorna la llista dels dominis per a les variables no assignades
 de L considerant les restriccions de R despres d’assignar X amb v, retorna fals si algun
 domini actualitzat és buit.
 '''
-def ActualitzarDominis():
-    return True
+def ActualitzarDominis(v, LVNA, R, DA, D):
+    for restriccio in R:
+        if v[3]==1: #horitzontal
+            if restriccio[0]==v[0]:
+                for vna in LVNA:
+                    if vna[3]==2:
+                        if vna[0]==restriccio[2]:
+                            domini = DA[(vna[0],vna[3])]
+                            nouDomini = np.array([],dtype=np.int32)
+                            for index in range(len(domini)):
+                                if D[v[1]][v[2]][restriccio[1]]== D[vna[1]][domini[index]][restriccio[3]]:
+                                    nouDomini= np.append(nouDomini,index)
+                            DA[(vna[0],vna[3])] = nouDomini
+        else:
+             if restriccio[2]==v[0]:
+                for vna in LVNA:
+                    if vna[3]==1:
+                        if vna[0]==restriccio[0]:
+                            domini = DA[(vna[0],vna[3])]
+                            nouDomini = np.array([],dtype=np.int32)
+                            for index in range(len(domini)):
+                                if D[v[1]][v[2]][restriccio[3]]== D[vna[1]][domini[index]][restriccio[1]]:
+                                    nouDomini= np.append(nouDomini,index)
+                            DA[(vna[0],vna[3])] = nouDomini
+
+    for domini in DA.values():
+        if len(domini)==0:
+            return False
+    return DA
 
 def Backtracking(LVA, LVNA, R, DA, D):
     if len(LVNA) == 0:
@@ -198,9 +225,10 @@ def Backtracking(LVA, LVNA, R, DA, D):
     for paraula in DA[(var[0],var[3])]:
         var[2]=paraula
         if SatisfaRestriccions(var, LVA, R, DA, D):
-            DAaux = ActualitzarDominis()
+            DAaux = dict(DA)
+            DAaux = ActualitzarDominis(var, LVNA, R, DAaux, D)
             if(DAaux != False):
-                res=Backtracking(np.append(LVA, var), LVNA, R, DA, D)
+                res=Backtracking(np.append(LVA, var), LVNA, R, DAaux, D)
                 if res != 0:
                     return res
         var[2]= -1
@@ -235,7 +263,8 @@ if __name__ == "__main__":
     llistaBuida = np.array([], dtype=dt)
     llista = Backtracking(llistaBuida,variables,restriccions,DA, dicc)
     print ("Solucio:\n", llista)
-    for j in range(0,len(llista)):
-        print (dicc[llista[j][1]][llista[j][2]])
-    printaSolucio(X,Y,llista,dicc)
+    if llista != 0:
+        for j in range(0,len(llista)):
+            print (dicc[llista[j][1]][llista[j][2]])
+        printaSolucio(X,Y,llista,dicc)
 
