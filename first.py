@@ -55,7 +55,8 @@ def crearVariables(X,Y):
     contParaules=-1
     contEspais=0
     indice = 0
-    variablesReturn = np.array([], dtype=dt)
+    #variablesReturn = np.array([], dtype=dt)
+    variablesReturn = []
     for x in range(0,X.shape[0]):
         for y in range(0,X.shape[1]):
             if (X[x,y] > 0 and X[x,y] != indice):
@@ -66,8 +67,8 @@ def crearVariables(X,Y):
                 contEspais+=1
                 if (contEspais > 1):
                     if (y==X.shape[0]-1 or X[x,y+1] == 0):
-                        m = np.array([(indice, contEspais,-1,1)], dtype=dt)
-                        variablesReturn = np.append(variablesReturn, m)
+                        m = [indice, contEspais,-1,1]
+                        variablesReturn.append(m)
     contEspais=0
     for x in range(0,Y.shape[0]):
         for y in range(0,Y.shape[1]):
@@ -79,8 +80,8 @@ def crearVariables(X,Y):
                 contEspais+=1
                 if (contEspais > 1):
                     if (y==Y.shape[0]-1 or Y[y+1,x] == 0):
-                        m = np.array([(indice, contEspais,-1,2)], dtype=dt)
-                        variablesReturn = np.append(variablesReturn, m)
+                        m = [indice, contEspais,-1,2]
+                        variablesReturn.append(m)
     return variablesReturn
 
 def contarParaules(X,Y):
@@ -100,8 +101,10 @@ def contarParaules(X,Y):
 
 def construirRestriccions(X,Y):
 
-    dtRestr = np.dtype([('id1',np.int32,1),('word1',np.int32,1),('id2',np.int32,1), ('word2',np.int32,1)])
-    restriccions = np.array([],dtype=dtRestr)
+    #dtRestr = np.dtype([('id1',np.int32,1),('word1',np.int32,1),('id2',np.int32,1), ('word2',np.int32,1)])
+    #restriccions = np.array([],dtype=dtRestr)
+
+    restriccions = []
     contVer = {}
     contHor = {}
     for x in range (0, tauler.shape[0]):
@@ -118,17 +121,18 @@ def construirRestriccions(X,Y):
                     contVer[Y[x][y]]+=1
 
             if(X[x][y] >0 and Y[x][y] >0):
-                m = np.array([(X[x][y],contHor[X[x][y]],Y[x][y],contVer[Y[x][y]])], dtype=dtRestr)
-                restriccions = np.append(restriccions, m)
+                #m = np.array([(X[x][y],contHor[X[x][y]],Y[x][y],contVer[Y[x][y]])], dtype=dtRestr)
+                m = [X[x][y],contHor[X[x][y]],Y[x][y],contVer[Y[x][y]]]
+                restriccions.append(m)
     return restriccions
 
 def construirDA(variables,dicc):
     DA = {}
-    print (dicc)
     for variable in variables:
-        llista =np.array([],dtype=np.int32)
+        llista = []
         for i in range(len(dicc[variable[1]])):
-            llista = np.append(llista,(i))
+            #llista = np.append(llista,(i))
+            llista.append((i))
         DA[(variable[0],variable[3])] = llista
     return DA
 
@@ -195,10 +199,11 @@ def ActualitzarDominis(v, LVNA, R, DA, D):
                     if vna[3]==2:
                         if vna[0]==restriccio[2]:
                             domini = DA[(vna[0],vna[3])]
-                            nouDomini = np.array([],dtype=np.int32)
+                            #nouDomini = np.array([],dtype=np.int32)
+                            nouDomini = []
                             for index in range(len(domini)):
                                 if D[v[1]][v[2]][restriccio[1]]== D[vna[1]][domini[index]][restriccio[3]]:
-                                    nouDomini= np.append(nouDomini,index)
+                                    nouDomini.append(domini[index])
                             DA[(vna[0],vna[3])] = nouDomini
         else:
              if restriccio[2]==v[0]:
@@ -206,40 +211,42 @@ def ActualitzarDominis(v, LVNA, R, DA, D):
                     if vna[3]==1:
                         if vna[0]==restriccio[0]:
                             domini = DA[(vna[0],vna[3])]
-                            nouDomini = np.array([],dtype=np.int32)
+                            nouDomini = []
                             for index in range(len(domini)):
                                 if D[v[1]][v[2]][restriccio[3]]== D[vna[1]][domini[index]][restriccio[1]]:
-                                    nouDomini= np.append(nouDomini,index)
+                                    nouDomini.append(domini[index])
                             DA[(vna[0],vna[3])] = nouDomini
 
     for domini in DA.values():
         if len(domini)==0:
             return False
+    #DA[(v[0],v[3])] = v[[2]]
     return DA
 
 def Backtracking(LVA, LVNA, R, DA, D):
     if len(LVNA) == 0:
         return LVA
     var = LVNA[0]
-    LVNA = np.delete(LVNA,0)
+    LVNA.pop(0)
     for paraula in DA[(var[0],var[3])]:
         var[2]=paraula
         if SatisfaRestriccions(var, LVA, R, DA, D):
             DAaux = dict(DA)
             DAaux = ActualitzarDominis(var, LVNA, R, DAaux, D)
             if(DAaux != False):
-                res=Backtracking(np.append(LVA, var), LVNA, R, DAaux, D)
+                LVA.append(var)
+                res=Backtracking(LVA, LVNA, R, DAaux, D)
                 if res != 0:
                     return res
         var[2]= -1
     return 0
 
 if __name__ == "__main__":
-    np.set_printoptions(precision=2)
+
     dt = np.dtype([('id',np.int32,1 ),('size',np.int32,1),('index', np.int32, 1), ('orientation',np.int32,1)])
 
-    fitxer_dic = "diccionari_CB.txt"
-    fitxer_tau = "crossword_CB.txt"
+    fitxer_dic = "diccionari_A.txt"
+    fitxer_tau = "crossword_A.txt"
     diccionari = np.genfromtxt(fitxer_dic,dtype='S16')
     tauler = np.loadtxt(fitxer_tau, dtype='S16', comments='!')
     tauler.tostring()
@@ -255,14 +262,14 @@ if __name__ == "__main__":
 
     print ("Variables:\n",variables,"\n")
     restriccions = construirRestriccions(X,Y)
-    print ("Restriccions:\n",restriccions,"\n")
+    #print ("Restriccions:\n",restriccions,"\n")
     dicc = construirDiccionari(diccionari)
     DA = construirDA(variables,dicc)
-    print ("Dicc\n:",dicc)
+    #print ("Dicc\n:",dicc,"\nDA: ",DA)
 
-    llistaBuida = np.array([], dtype=dt)
+    llistaBuida = []
     llista = Backtracking(llistaBuida,variables,restriccions,DA, dicc)
-    print ("Solucio:\n", llista)
+    #print ("Solucio:\n", llista)
     if llista != 0:
         for j in range(0,len(llista)):
             print (dicc[llista[j][1]][llista[j][2]])
