@@ -7,6 +7,7 @@ __author__ = 'Marti, Alex, Alvaro'
 #Variables -> [float id,int size, string paraula]
 #Restrictions -> [id1, pos1, id2, pos 2]
 import numpy as np
+import random
 
 def construirDiccionari(diccionari):
 
@@ -41,7 +42,7 @@ def construirVariablesVer(tauler,Y):
         for x in range (0, tauler.shape[1]):
             try:
                 if (int(tauler[x,y]) > 0 and adjudicat==False):
-                    if (x < tauler.shape[1]-1 and int(tauler[x+1,y])==0):
+                    if (x < tauler.shape[1]-1 and int(tauler[x+1,y])>=0):
                         indice = int(tauler[x,y])
                         adjudicat = True
                 if (int(tauler[x,y]) >= 0):
@@ -133,6 +134,7 @@ def construirDA(variables,dicc):
         for i in range(len(dicc[variable[1]])):
             #llista = np.append(llista,(i))
             llista.append((i))
+        random.shuffle(llista)
         DA[(variable[0],variable[3])] = llista
     return DA
 
@@ -170,9 +172,7 @@ def printaSolucio(taulerHor, taulerVer, llista,dicc):
                         #print (chr(dicc[llista[j][1]][llista[j][2]][y-llista[j][1]]))
             else:
                 indexLletra = 0
-                solucio[x,y]="!"
-
-
+                solucio[x,y]="#"
     for y in range (0, taulerVer.shape[0]):
         indexLletra = 0
         for x in range (0, taulerVer.shape[1]):
@@ -185,12 +185,8 @@ def printaSolucio(taulerHor, taulerVer, llista,dicc):
             else:
                 indexLletra = 0
                 #solucio[x,y]="!"
-    print ("\n",solucio)
-'''ActualitzarDominis(‘(X v),L,R):
-Retorna la llista dels dominis per a les variables no assignades
-de L considerant les restriccions de R despres d’assignar X amb v, retorna fals si algun
-domini actualitzat és buit.
-'''
+    return solucio
+
 def ActualitzarDominis(v, LVNA, R, DA, D):
     for restriccio in R:
         if v[3]==1: #horitzontal
@@ -220,25 +216,37 @@ def ActualitzarDominis(v, LVNA, R, DA, D):
     for domini in DA.values():
         if len(domini)==0:
             return False
-    #DA[(v[0],v[3])] = v[[2]]
+    #DA[(v[0],v[3])] = [v[2]]
     return DA
+
+def SeleccionarParaula(LVNA,DA):
+    minDom = 99999999
+    for i in DA.keys():
+        if len(DA[i])<minDom:
+            minDom = len(DA[i])
+            paraula = i
+    for i in LVNA:
+        if (i[0],i[3]) == paraula :
+            LVNA.remove(i)
+            return i
 
 def Backtracking(LVA, LVNA, R, DA, D):
     if len(LVNA) == 0:
         return LVA
-    var = LVNA[0]
-    LVNA.pop(0)
+    var = SeleccionarParaula(LVNA,DA)
     for paraula in DA[(var[0],var[3])]:
         var[2]=paraula
-        if SatisfaRestriccions(var, LVA, R, DA, D):
-            DAaux = dict(DA)
-            DAaux = ActualitzarDominis(var, LVNA, R, DAaux, D)
-            if(DAaux != False):
-                LVA.append(var)
-                res=Backtracking(LVA, LVNA, R, DAaux, D)
-                if res != 0:
-                    return res
+        DAaux = dict(DA)
+        del DAaux[(var[0],var[3])]
+        DAaux = ActualitzarDominis(var, LVNA, R, DAaux, D)
+        if(DAaux != False):
+            LVA.append(var)
+            res=Backtracking(LVA, LVNA, R, DAaux, D)
+            if res != 0:
+                return res
+            LVA.remove(var)
         var[2]= -1
+    LVNA.insert(0,var)
     return 0
 
 if __name__ == "__main__":
@@ -246,7 +254,7 @@ if __name__ == "__main__":
     dt = np.dtype([('id',np.int32,1 ),('size',np.int32,1),('index', np.int32, 1), ('orientation',np.int32,1)])
 
     fitxer_dic = "diccionari_A.txt"
-    fitxer_tau = "crossword_A.txt"
+    fitxer_tau = "crossword_BE.txt"
     diccionari = np.genfromtxt(fitxer_dic,dtype='S16')
     tauler = np.loadtxt(fitxer_tau, dtype='S16', comments='!')
     tauler.tostring()
@@ -262,16 +270,20 @@ if __name__ == "__main__":
 
     print ("Variables:\n",variables,"\n")
     restriccions = construirRestriccions(X,Y)
-    #print ("Restriccions:\n",restriccions,"\n")
+    print ("Restriccions:\n",restriccions,"\n")
     dicc = construirDiccionari(diccionari)
+    #print ("Dicc:\n",dicc,"\n")
     DA = construirDA(variables,dicc)
-    #print ("Dicc\n:",dicc,"\nDA: ",DA)
+   # print ("DA:\n",DA,"\n")
 
     llistaBuida = []
     llista = Backtracking(llistaBuida,variables,restriccions,DA, dicc)
-    #print ("Solucio:\n", llista)
+    print ("Solucio:\n", llista)
     if llista != 0:
-        for j in range(0,len(llista)):
-            print (dicc[llista[j][1]][llista[j][2]])
-        printaSolucio(X,Y,llista,dicc)
+        sol = printaSolucio(X,Y,llista,dicc)
+        #print ("Solucio:\n",sol)
+        for element in sol:
+            for elem in element:
+                print (elem, end="\t")
 
+            print ("\n")
