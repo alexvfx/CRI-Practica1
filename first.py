@@ -251,10 +251,10 @@ def Backtracking(LVA, LVNA, R, DA, D):
 
 if __name__ == "__main__":
 
-    dt = np.dtype([('id',np.int32,1 ),('size',np.int32,1),('index', np.int32, 1), ('orientation',np.int32,1)])
+    #dt = np.dtype([('id',np.int32,1 ),('size',np.int32,1),('index', np.int32, 1), ('orientation',np.int32,1)])
 
     fitxer_dic = "diccionari_A.txt"
-    fitxer_tau = "crossword_BE.txt"
+    fitxer_tau = "crossword_A.txt"
     diccionari = np.genfromtxt(fitxer_dic,dtype='S16')
     tauler = np.loadtxt(fitxer_tau, dtype='S16', comments='!')
     tauler.tostring()
@@ -263,22 +263,22 @@ if __name__ == "__main__":
     Y = np.zeros(tauler.shape)
     construirVariablesHor(tauler, X)
     construirVariablesVer(tauler, Y)
-    print ("tauler")
-    print (X,"\n")
-    print (Y,"\n")
+    # print ("tauler")
+    # print (X,"\n")
+    # print (Y,"\n")
     variables = crearVariables(X,Y)
 
-    print ("Variables:\n",variables,"\n")
+    #print ("Variables:\n",variables,"\n")
     restriccions = construirRestriccions(X,Y)
-    print ("Restriccions:\n",restriccions,"\n")
+    #print ("Restriccions:\n",restriccions,"\n")
     dicc = construirDiccionari(diccionari)
     #print ("Dicc:\n",dicc,"\n")
     DA = construirDA(variables,dicc)
-   # print ("DA:\n",DA,"\n")
+    print ("DA:\n",DA,"\n")
 
     llistaBuida = []
     llista = Backtracking(llistaBuida,variables,restriccions,DA, dicc)
-    print ("Solucio:\n", llista)
+    #print ("Solucio:\n", llista)
     if llista != 0:
         sol = printaSolucio(X,Y,llista,dicc)
         #print ("Solucio:\n",sol)
