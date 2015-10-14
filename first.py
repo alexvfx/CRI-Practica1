@@ -8,9 +8,10 @@ __author__ = 'Marti, Alex, Alvaro'
 #Restrictions -> [id1, pos1, id2, pos 2]
 import numpy as np
 import random
+import time
 
 def construirDiccionari(diccionari):
-
+    '''Crea un diccionari ordenat segons el tamany de cada paraula'''
     dicc = {}
     max = 20
     for x in range(2,max+1):
@@ -20,6 +21,7 @@ def construirDiccionari(diccionari):
     return dicc
 
 def construirVariablesHor(tauler,X):
+    '''crear un tauler(paraules horitzontals) X amb tots els IDS de les variables a la posició on va cada paraula'''
     for x in range (0, tauler.shape[0]):
         adjudicat = False
         indice = 0
@@ -36,6 +38,7 @@ def construirVariablesHor(tauler,X):
                 adjudicat = False
 
 def construirVariablesVer(tauler,Y):
+    '''crear un tauler(paraules verticals) Y amb tots els IDS de les variables a la posició on va cada paraula'''
     for y in range (0, tauler.shape[0]):
         adjudicat = False
         indice = 0
@@ -53,10 +56,10 @@ def construirVariablesVer(tauler,Y):
                 adjudicat = False
 
 def crearVariables(X,Y):
+    '''Recorrent els taulers X,Y crea la llista de variables'''
     contParaules=-1
     contEspais=0
     indice = 0
-    #variablesReturn = np.array([], dtype=dt)
     variablesReturn = []
     for x in range(0,X.shape[0]):
         for y in range(0,X.shape[1]):
@@ -101,10 +104,7 @@ def contarParaules(X,Y):
     return contParaules
 
 def construirRestriccions(X,Y):
-
-    #dtRestr = np.dtype([('id1',np.int32,1),('word1',np.int32,1),('id2',np.int32,1), ('word2',np.int32,1)])
-    #restriccions = np.array([],dtype=dtRestr)
-
+    '''recorrer els taulers X,Y per saber on hi ha conflicte entre diferents paraules i retorna una llista amb aquestes restriccions'''
     restriccions = []
     contVer = {}
     contHor = {}
@@ -128,17 +128,18 @@ def construirRestriccions(X,Y):
     return restriccions
 
 def construirDA(variables,dicc):
+    '''Crea un diccionari on per cada variable es crea una Key (id, orientacio) i el seu value és el seu propi domini d'aquella paraula'''
     DA = {}
     for variable in variables:
         llista = []
         for i in range(len(dicc[variable[1]])):
-            #llista = np.append(llista,(i))
             llista.append((i))
-        random.shuffle(llista)
+        #random.shuffle(llista)
         DA[(variable[0],variable[3])] = llista
     return DA
 
 def SatisfaRestriccions(v, LVA, R, DA, D):
+    '''Comprova que per una variable en concret no hi ha cap conflicte amb tota la llista de variables assignades'''
     if LVA == []:
         return True
     else:
@@ -160,6 +161,7 @@ def SatisfaRestriccions(v, LVA, R, DA, D):
         return True
 
 def printaSolucio(taulerHor, taulerVer, llista,dicc):
+    '''retorna un tauler amb totes les paraules finals posades al seu lloc per poder printar-lo posteriorment'''
     solucio = np.zeros(taulerHor.shape, dtype='str')
     for x in range (0, taulerHor.shape[0]):
         indexLletra = 0
@@ -188,6 +190,7 @@ def printaSolucio(taulerHor, taulerVer, llista,dicc):
     return solucio
 
 def ActualitzarDominis(v, LVNA, R, DA, D):
+    '''per cada DA comprova totes les restriccions amb LVNA per actualitzar cada domini propi de cada variable'''
     for restriccio in R:
         if v[3]==1: #horitzontal
             if restriccio[0]==v[0]:
@@ -219,7 +222,8 @@ def ActualitzarDominis(v, LVNA, R, DA, D):
     #DA[(v[0],v[3])] = [v[2]]
     return DA
 
-def SeleccionarParaula(LVNA,DA):
+def SeleccionarVariable(LVNA,DA):
+    '''Retorna la variable amb el domini més petit'''
     minDom = 99999999
     for i in DA.keys():
         if len(DA[i])<minDom:
@@ -231,9 +235,10 @@ def SeleccionarParaula(LVNA,DA):
             return i
 
 def Backtracking(LVA, LVNA, R, DA, D):
+    '''Algoritme Backtracking'''
     if len(LVNA) == 0:
         return LVA
-    var = SeleccionarParaula(LVNA,DA)
+    var = SeleccionarVariable(LVNA,DA)
     for paraula in DA[(var[0],var[3])]:
         var[2]=paraula
         DAaux = dict(DA)
@@ -250,40 +255,45 @@ def Backtracking(LVA, LVNA, R, DA, D):
     return 0
 
 if __name__ == "__main__":
+    t1=0
+    for i in range(0,1):
+        t0 = time.clock()
 
-    #dt = np.dtype([('id',np.int32,1 ),('size',np.int32,1),('index', np.int32, 1), ('orientation',np.int32,1)])
+        fitxer_dic = "diccionari_CB.txt"
+        fitxer_tau = "crossword_CB.txt"
+        diccionari = np.genfromtxt(fitxer_dic,dtype='S16')
+        tauler = np.loadtxt(fitxer_tau, dtype='S16', comments='!')
+        tauler.tostring()
 
-    fitxer_dic = "diccionari_A.txt"
-    fitxer_tau = "crossword_A.txt"
-    diccionari = np.genfromtxt(fitxer_dic,dtype='S16')
-    tauler = np.loadtxt(fitxer_tau, dtype='S16', comments='!')
-    tauler.tostring()
+        X = np.zeros(tauler.shape)
+        Y = np.zeros(tauler.shape)
+        construirVariablesHor(tauler, X)
+        construirVariablesVer(tauler, Y)
+        # print ("tauler")
+        # print (X,"\n")
+        # print (Y,"\n")
+        variables = crearVariables(X,Y)
 
-    X = np.zeros(tauler.shape)
-    Y = np.zeros(tauler.shape)
-    construirVariablesHor(tauler, X)
-    construirVariablesVer(tauler, Y)
-    # print ("tauler")
-    # print (X,"\n")
-    # print (Y,"\n")
-    variables = crearVariables(X,Y)
+        #print ("Variables:\n",variables,"\n")
+        restriccions = construirRestriccions(X,Y)
+        #print ("Restriccions:\n",restriccions,"\n")
+        dicc = construirDiccionari(diccionari)
+        #print ("Dicc:\n",dicc,"\n")
+        DA = construirDA(variables,dicc)
+        #print ("DA:\n",DA,"\n")
 
-    #print ("Variables:\n",variables,"\n")
-    restriccions = construirRestriccions(X,Y)
-    #print ("Restriccions:\n",restriccions,"\n")
-    dicc = construirDiccionari(diccionari)
-    #print ("Dicc:\n",dicc,"\n")
-    DA = construirDA(variables,dicc)
-    print ("DA:\n",DA,"\n")
+        llistaBuida = []
+        llista = Backtracking(llistaBuida,variables,restriccions,DA, dicc)
+        #print ("Solucio:\n", llista)
+        if llista != 0:
+            sol = printaSolucio(X,Y,llista,dicc)
+            #print ("Solucio:\n",sol)
+            for element in sol:
+                for elem in element:
+                    print (elem, end="\t")
 
-    llistaBuida = []
-    llista = Backtracking(llistaBuida,variables,restriccions,DA, dicc)
-    #print ("Solucio:\n", llista)
-    if llista != 0:
-        sol = printaSolucio(X,Y,llista,dicc)
-        #print ("Solucio:\n",sol)
-        for element in sol:
-            for elem in element:
-                print (elem, end="\t")
-
-            print ("\n")
+                print ("\n")
+        print ("-----\t-------\t-------\t-------\t-------")
+        t1 += (time.clock() - t0)
+    final = t1/1
+    print ("%.2f sec" % final)
