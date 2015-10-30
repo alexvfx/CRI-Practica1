@@ -1,1 +1,0 @@
-# CRI-Practica1
